@@ -8,7 +8,7 @@
 - Clustering: 29 de septiembre y 2 de octubre
 - Reglas de Asociación: 23 y 30 de octubre
 
-El resto de las fechas se encuentra en el calendario en U-Cursos ([link](https://www.u-cursos.cl/ingenieria/2017/2/CC5206/1/enlaces/).)
+El resto de las fechas se encuentra en el calendario en U-Cursos ([link](https://www.u-cursos.cl/ingenieria/2017/2/CC5206/1/enlaces/))
 
 ### Tutoriales
 - Tutorial 1: [Exploración y Visualización en R](https://github.com/mquezada/uchile-cc5206/blob/master/tutoriales/tutorial1.Rmd)
