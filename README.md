@@ -2,7 +2,6 @@
 
 ## Semestre Primavera 2017
 
-
 ### Fechas de Laboratorios
 - Exploración y Visualización: 7 y 11 de agosto
 - Clasificación: 28 de agosto y 1 de septiembre
@@ -11,10 +10,8 @@
 
 El resto de las fechas se encuentra en el calendario en U-Cursos ([link](https://www.u-cursos.cl/ingenieria/2017/2/CC5206/1/enlaces/).)
 
-
 ### Tutoriales
 - Tutorial 1: [Exploración y Visualización en R](https://github.com/mquezada/uchile-cc5206/blob/master/tutoriales/tutorial1.Rmd)
-
 
 ### Proyectos
 
