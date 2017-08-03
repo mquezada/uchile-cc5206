@@ -1,0 +1,81 @@
+---
+title: "Tutorial 2: Exploración y Visualización de Datos en R (parte 2)"
+author: "Mauricio Quezada, José Miguel Herrera, Bárbara Poblete"
+date: "11 de Agosto de 2017"
+output: 
+  html_document: 
+    theme: spacelab
+    toc: yes
+---
+
+
+## Librería reshape
+
+En muchas ocaciones nos encontraremos que los datos no vienen de la forma que nos gustaría. A veces es necesario maniputar el formato de una tabla de datos para poder operarla.  
+
+En esta sesión utilizaremos la librería ```reshape``` que permite justamente reformatear o manipular una matriz de datos. 
+
+Primero que todo, necesitamos instalar el paquete ```reshape```. Para ello utilizaremos ```install.packages()```. 
+```{r eval=F}
+install.packages("reshape")
+```
+
+Instalar un paquete se hace sólo una vez, después sólo se invoca con ```library()```.
+
+```{r}
+library("reshape")
+```
+
+Ahora veamos como se usa.
+Por ejemplo, consideremos el siguiente dataframe que contiene un registro de los goles que convirtió colo-colo (CC) y la Universidad de Chile (U) en la primera y segunda fecha del campeonato:
+
+```{r}
+d <- data.frame(fecha = c(1,2,1,2),
+                equipo = c("CC", "U", "CC", "U"), 
+                favor = c(4, 4, 2, 2),
+                contra = c(1, 0, 1, 3))
+d
+```
+
+Por ejemplo, en la fecha 1, colo-colo hizo 4 goles y recibió 1 en contra (da lo mismo con que equipo jugó). 
+
+Con ```melt()``` podemos reformatear la tabla de datos:
+
+```{r}
+d2 <- melt(d, id=c("fecha", "equipo"))
+d2
+```
+
+Note que cada fila contiene una observación de los datos formateada de otra manera. En la función le indicamos que deje fijas las columnas ```fecha``` y ```equipo```. Observe además el nombre de las columnas. 
+
+Además podemos hacer algo similar a ```aggregate```. Por ejemplo, para ver el promedio de goles de cada fecha:
+
+```{r}
+cast(d2, fecha ~ variable, mean )
+```
+
+
+## apply()
+
+Con ```apply()``` podemos aplicar funciones o procesos a un conjunto de datos evitándonos hacer iteraciones. 
+
+Por ejemplo, creemos una matriz de 4x5 con números aleatorios: 
+```{r}
+ax <- matrix(rnorm(20), ncol = 5)
+ax
+```
+
+```apply``` actúa sobre sobre filas o columnas y la sintanxis es: ```apply(DATA, FC, FUN)``` donde ```DATA``` son los datos, ```FC``` puede ser 1 (fila) o 2 (columna) y ```FUN``` es la función a aplicar. Entonces, para calcular el promedio de la primera fila, sería:
+```
+apply(ax, 1, mean)
+```
+También podría aplicar una función específica a cada columna ```x*10```:
+
+```{r}
+apply(ax, 2, function(x){return(x*10)})
+```
+También existe ```lapply()``` 
+
+
+
+
