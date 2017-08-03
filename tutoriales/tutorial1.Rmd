@@ -154,17 +154,17 @@ with(tipos, tipos[Anio == 2011 & Descripcion == "TEMUCO", ])
 Para saber cuantos atropellos hubo en todo Chile podemos emplear ```aggregate```:
 
 ```{r}
-aggregate(tipos$Cantidad, by=list(t=tipos$TipoAccidente), FUN=sum)
+aggregate(Cantidad ~ TipoAccidente, tipos, FUN=sum)
 ```
 
-Lo anterior se lee: sume la columna cantidad y agrupe por TipoAccidente (esta columna ahora se llama t). 
+Lo anterior se lee: sume la columna Cantidad por TipoAccidente.
 
-Podríamos dejar el resultado anterior en una variable y luego obtener el dato preciso:
+También podríamos sumar la columna cantidad por TipoAccidente, y además, por Anio. 
 
 ```{r}
-ag <- aggregate(tipos$Cantidad, by=list(t=tipos$TipoAccidente), FUN=sum)
-ag[ag$t == "Atropello", 2]
+aggregate(Cantidad ~ TipoAccidente + Anio, tipos, FUN=sum)
 ```
+
 
 Con ```unique``` podemos obtener el conjunto de datos (sin repetir) de una columna. Por ejemplo, si queremos conocer el conjunto de datos de la columna ```TipoAccidente```:
 
