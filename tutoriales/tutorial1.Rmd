@@ -179,8 +179,8 @@ unique(tipos$TipoAccidente)
 Vamos a generar un gráfico a partir de nuevos números aleatorios. Para ello usamos plot. 
 
 ```{r}
-plot(1:1000, runif(1000, 0, 1)) # genera 1000 numeros aleatorios a partir de la distribucion normal
-plot(1:1000, rnorm(1000, 0, 1)) # genera 1000 numeros aleatorios a partir de la distribucion uniforme
+plot(1:1000, runif(1000, 0, 1)) # genera 1000 numeros aleatorios a partir de la distribucion uniforme
+plot(1:1000, rnorm(1000, 0, 1)) # genera 1000 numeros aleatorios a partir de la distribucion normal
 ```
 
 ### Boxplot
