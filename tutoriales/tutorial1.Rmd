@@ -214,6 +214,16 @@ afect2010 <- with(afectados,
 barplot(afect2010$Cantidad, names.arg = afect2010$Descripcion)
 ```
 
+### Histograma
+
+```{r}
+afect2010 <- with(afectados,
+                  afectados[Muestra == "Regional" &
+                              Anio == 2010 &
+                              Estado == "Muertos", ])
+hist(afect2010$Cantidad)
+```
+
 ## Librería ```ggplot2```
 La biblioteca ```ggplot``` permite hacer gráficos más elaborados. Ver los siguientes resultados:
 
@@ -232,6 +242,9 @@ ggplot(tipos[tipos$Muestra == "Nacional", ],
   facet_grid(Anio ~ Descripcion) +
   coord_flip() +
   geom_bar(stat="identity")
+
+
+ggplot(afect2010, aes(x=Cantidad)) + geom_histogram(binwidth = 50)
 
 ```
 
