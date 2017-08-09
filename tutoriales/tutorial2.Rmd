@@ -8,18 +8,8 @@ output:
     toc: yes
 ---
 
-## TF-IDF
 
-En esta sesión trabajaremos con dos medidas muy importantes en minería de datos que sirven para caracterízar documentos: TF y TF-IDF.
-
-**TF (Term Frequency)** es la medida de frecuencia de un término dentro de un documento. Por ejemplo, en la frase anterior el TF de la palabra "un" es 2 y el de "medida" es 1. 
-
-**TF-IDF** es otra medida estadística para evaluar cuan importante es una palabra en un corpus o en un documento. La importancia de un término aumenta proporcionalmente al número de veces que una palabra aparece en el documento, pero está compensada por la frecuencia de la palabra en el *corpus*. 
-
-Por ejemplo, si tomaramos los discusos presidenciales, es probable que los términos más frecuentes (TF) sean "Chile", "y", "o", "de", etc., pero quizás hay terminos que se repiten poco en los discursos pero son relevantes: `educacion`, `pobreza`, `calidad`, etc. 
-
-
-## Bibliotecas útiles
+## Bibliotecas útiles para la sesión 
 
 En muchas ocaciones nos encontraremos que los datos no vienen de la forma que nos gustaría. A veces es necesario maniputar el formato de una tabla de datos para poder operarla.  
 
@@ -54,6 +44,7 @@ d2 <- melt(d, id=c("fecha", "equipo"))
 
 Note que ahora cada fila contiene una observación de los datos formateada de otra manera. 
 En la función le indicamos que deje fijas las columnas `fecha` y `equipo`, y cree un registro para cada instancia de `favor` y otro en `contra`. Observe además el nombre de las nuevas columnas. 
+
 
 
 ## apply()
