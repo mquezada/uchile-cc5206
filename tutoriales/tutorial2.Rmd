@@ -55,12 +55,6 @@ d2 <- melt(d, id=c("fecha", "equipo"))
 Note que ahora cada fila contiene una observación de los datos formateada de otra manera. 
 En la función le indicamos que deje fijas las columnas `fecha` y `equipo`, y cree un registro para cada instancia de `favor` y otro en `contra`. Observe además el nombre de las nuevas columnas. 
 
-Ahora, con `cast` podemos hacer algo similar a ```aggregate```. Por ejemplo, para ver el promedio de goles a favor y en contra de cada fecha, podemos hacer:
-
-```{r}
-cast(d2, fecha ~ variable, mean )
-```
-
 
 ## apply()
 
