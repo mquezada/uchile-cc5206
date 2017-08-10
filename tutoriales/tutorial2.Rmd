@@ -125,6 +125,8 @@ a[order(a$x, decreasing = T),]   # ordena la columna x de mayor a menor
 Otra forma de ordenar es mediante `sort()`:
 
 ```{r}
-sort(rnorm(100))
+b <- rnorm(100)
+sort(b)  # ordenado de menor a mayor
+sort(b, decreasing = T)  # ordenado de mayor a menor
 ```
 
