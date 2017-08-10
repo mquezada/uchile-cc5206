@@ -9,7 +9,7 @@ output:
 ---
 
 
-## Bibliotecas útiles para la sesión 
+## Funciones útiles para la sesión 
 
 En muchas ocaciones nos encontraremos que los datos no vienen de la forma que nos gustaría. A veces es necesario maniputar el formato de una tabla de datos para poder operarla.  
 
@@ -29,25 +29,67 @@ Por ejemplo, consideremos el siguiente dataframe que contiene un registro de los
 
 ```{r}
 d <- data.frame(fecha = c(1,2,1,2),
-                equipo = c("CC", "U", "CC", "U"), 
-                favor = c(4, 4, 2, 2),
-                contra = c(1, 0, 1, 3))
+                equipo = c("CC", "CC", "U", "U"), 
+                favor = c(4, 3, 1, 2),
+                contra = c(0, 2, 4, 0))
+d
 ```
 
-Por ejemplo, en la fecha 1, colo-colo hizo 4 goles y recibió 1 en contra (da lo mismo con el equipo que jugó). 
+Por ejemplo, en la fecha 1, colo-colo hizo 4 goles (a favor) y no recibió goles en contra. En la misma fecha, la U hizo 1 gol (a favor) y recibió 4 en contra. 
 
-Con la función ```melt()``` podemos reformatear la tabla de datos:
+Una forma de sumar todos los goles de la primera fecha es mediante la suma de las columnas favor y contra:
+```{r}
+f1 <- d[d$fecha == 1,]   
+sum(f1[, c(3,4)])  # c(3,4) indica que tomará la columna 3 y la 4. 
+```
+
+Otra forma es tomar solo las columnas `favor` y en `contra`.
+
+```{r}
+sum(d[d$fecha == 1, 3:4])  # 3:4 indica que tome la columna 3 hasta la 4. 
+```
+
+También podríamos haberlo hecho con `aggregate`. 
+
+### melt()
+
+Otra forma de sumar los goles de una fecha particular, es reformateando la tabla y dejando todos los goles en una sola columna. Para esto podemos usar la función ```melt()```:
 
 ```{r}
 d2 <- melt(d, id=c("fecha", "equipo"))
+d2
 ```
 
-Note que ahora cada fila contiene una observación de los datos formateada de otra manera. 
-En la función le indicamos que deje fijas las columnas `fecha` y `equipo`, y cree un registro para cada instancia de `favor` y otro en `contra`. Observe además el nombre de las nuevas columnas. 
+Note que ahora cada fila contiene los mismos datos, pero ahora formateados de otra manera. 
+En la función se le indica que deje fijas las columnas `fecha` y `equipo`, y cree un registro para cada instancia de `favor` y otro en `contra`. Observe además el nombre de las nuevas columnas. 
+Con esto podríamos sumar más fácilmente todos los goles de la primera fecha:
+
+```{r}
+f2 <- d2[d2$fecha == 1,]
+sum(f2$value)
+```
+
+
+### rowSums()
+
+Esta función retorna una la suma de cada una de las fila de una matriz o data frame. Por ejemplo, usando `d` del ejemplo anterior, podríamos sumar todos los goles, de cada fecha y equipo. 
+
+```{r}
+rowSums(d[, 3:4])
+```
+
+### colSums()
+
+Lo mismo anterior, pero ahora con las columnas:
+
+```{r}
+colSums(d[,3:4])
+
+```
 
 
 
-## apply()
+### apply()
 
 Con ```apply()``` podemos aplicar funciones o procesos a un conjunto de datos evitándonos hacer iteraciones. 
 
@@ -66,7 +108,10 @@ También podría aplicar una función específica a cada columna ```x*10```:
 ```{r}
 apply(ax, 2, function(x){return(x*10)})
 ```
-También existe ```lapply()``` 
+
+### Otras funciones que podrían ser útiles.
+
+Averigue el funcionamiento de `?order`.
 
 
 
