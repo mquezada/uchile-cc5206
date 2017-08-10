@@ -120,4 +120,11 @@ a[order(a$x, decreasing = T),]   # ordena la columna x de mayor a menor
 
 ```
 
+### sort()
+
+Otra forma de ordenar es mediante `sort()`:
+
+```{r}
+sort(rnorm(100))
+```
 
