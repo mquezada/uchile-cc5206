@@ -130,3 +130,9 @@ sort(b)  # ordenado de menor a mayor
 sort(b, decreasing = T)  # ordenado de mayor a menor
 ```
 
+
+### Otras bibliotecas útiles para la sesión
+```{r}
+install.packages("data.table")
+```
+
