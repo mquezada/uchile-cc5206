@@ -1,0 +1,80 @@
+---
+title: "Tutorial 3: Clasificación"
+author: "Mauricio Quezada, José Miguel Herrera, Bárbara Poblete"
+date: "Laboratorio 3 del 28 de Agosto de 2017"
+output: 
+  html_document: 
+    theme: spacelab
+    toc: yes
+---
+
+
+# De la sesión de laboratorio
+
+El laboratorio 3 consiste en evaluar un clasificador. 
+Existen varias herramientas para llevar a cabo esta tarea. 
+En este laboratorio emplearemos Python versión 3.x y usando la biblioteca `scikit-learn` (http://scikit-learn.org/stable/install.html).
+
+El dataset que usaremos para evaluar el clasificador será el de Iris que consiste en 50 samples de 3 especies de flores (setosa, virginica y versicolor). 
+
+## Cargar bibliotecas
+
+Para cargar todo lo neceario para la sesión, se debe escribir en un archivo `.py`. 
+Para llamar a las bibliotecas:
+
+```{python, eval=F}
+from sklearn.datasets import load_iris, load_breast_cancer
+from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.metrics import confusion_matrix, classification_report
+
+from sklearn.utils import shuffle
+
+from sklearn import tree
+from sklearn import svm
+from sklearn.neighbors import KNeighborsClassifier
+
+from sklearn import cross_validation
+```
+
+Recuerde que para ejecutar python, lo debe hacer mediante el comando `pythonX` si usa el terminal (por ejemplo, `python3 lab2.py`), o presionando el botón `RUN` (si usa el IDLE que viene con python).
+
+## Cargar el dataset
+
+Este dataset Iris que emplearemos en la sesión viene con `scikit-learn` y se carga de la siguiente manera:
+
+```{python, eval=F}
+## ejecutar este bloque
+iris = load_iris()
+X = iris.data
+y = iris.target
+print("X:\n", X[:5]) # para que muestre los primeros 5 datos de X
+print("y:\n", y[:5], y[95:100], y[-5:])
+```
+
+(Recuerde que los índices en python parten de 0, es decir, si `Z = [ 1,2,3,4]`, entonces `Z[3]` corresponde al valor `4`).
+
+En los resultados anteriores podemos ver que X es una matriz con los datos y cada fila corresponde a una lista de 4 valores.
+En la matriz Y se guarda la clase que corresponde de cada fila de X y tiene valores 0, 1 o 2. 
+
+Usando el método `DESCR` de `iris` están los detalles del dataset.
+
+```{python, eval=F}
+print(iris.DESCR)
+```
+
+## Evaluación de un clasificador
+
+Para evaluar un clasificador, típicamente tenemos 3 formas:
+
+1. Entrenamos con los *datos de entrenamiento*, y evaluamos el clasificador en los *datos de entrenamiento*.
+
+2. Antes de entrenar, separamos nuestros datos en *datos de entrenamiento* y *datos de prueba*. Entrenamos sobre el primer conjunto y evaluamos el rendimiento del clasificador sobre el segundo.
+
+3. Usamos el paso (2), pero separando los datos muchas veces y entrenando y evaluando sobre un conjunto distinto cada vez. Esta forma es llamada *cross-validation*. Por ejemplo, cuando hablamos de `3-fold`, corresponde a separar los datos en 3 conjuntos y usar 2 de ellos para entrenar y el otro para probar. Esto se puede hacer varias veces.   
+
+Llamaremos indistintamente a los *datos de entrenamiento* como el *Training set* y a los *datos de prueba* como el *Test set*.
+
+
+
+
+
