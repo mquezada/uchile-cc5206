@@ -36,7 +36,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn import cross_validation
 ```
 
-Recuerde que para ejecutar python, lo debe hacer mediante el comando `pythonX` si usa el terminal (por ejemplo, `python3 lab2.py`), o presionando el botón `RUN` (si usa el IDLE que viene con python).
+Recuerde que para ejecutar una archivo de python se debe hacer mediante usando el comando `python` (o `python3`) si usa el terminal (por ejemplo, `python3 lab2.py`), o presionando el botón `RUN` (si usa el IDLE que viene con python).
 
 ## Cargar el dataset
 
@@ -61,6 +61,10 @@ Usando el método `DESCR` de `iris` están los detalles del dataset.
 ```{python, eval=F}
 print(iris.DESCR)
 ```
+
+## Instalar Anaconda
+
+Para la sesión también será necesario emplear `Anaconda` que es una herramienta para trabajar con datos de python. Las instrucciones para la instalación están en: https://www.continuum.io/downloads
 
 ## Evaluación de un clasificador
 
