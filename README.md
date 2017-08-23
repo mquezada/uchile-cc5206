@@ -39,10 +39,11 @@ La siguiente es una lista de proyectos sugeridos para el curso. Las fechas de la
 
 #### Otros temas sugeridos
 
-- Ranking y clasificación de preguntas/respuestas en Yahoo Answers (pedir a José Miguel los datos).
-- Juegos Olímpicos 2016 en Twitter (español, inglés y portugués) (pedir a Mauricio los datos).
-- Reacciones en Twitter ante la sexta temporada de Game of Thrones (pedir a Mauricio los datos).
-- Analizar comentarios a artículos de Emol (pedir a Mauricio los datos).
+- Ranking y clasificación de preguntas/respuestas en Yahoo Answers (pedir a José Miguel los datos)
+- Juegos Olímpicos 2016 en Twitter (español, inglés y portugués) (pedir a Mauricio los datos)
+- Reacciones en Twitter ante la sexta temporada de Game of Thrones (pedir a Mauricio los datos)
+- Analizar comentarios a artículos de Emol (pedir a Mauricio los datos)
+- Dataset de reviews de cervezas (pedir a José Miguel los datos)
 
 
 #### Otros datasets disponibles
