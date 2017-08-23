@@ -69,6 +69,7 @@ La siguiente es una lista de proyectos sugeridos para el curso. Las fechas de la
 
 #### Otoño 2016
 
+* [Predicción de resultados de partidos de fútbol](https://cdn.rawgit.com/LucasCabello/DM/2ab32e5b/markdown.html)
 * [Similitud de Instrucciones en Código de Fuente C#](https://users.dcc.uchile.cl/~mquezada/cursos/cc5206/2016-2/proyectos_pasados/ast/index.html)
 * [Datos de Educación Superior](https://users.dcc.uchile.cl/~mquezada/cursos/cc5206/2016-2/proyectos_pasados/educ_superior/)
 * [Origen y Destino de Viajes en Santiago 2012-2013](https://users.dcc.uchile.cl/~mquezada/cursos/cc5206/2016-2/proyectos_pasados/encuesta_transporte.html)
