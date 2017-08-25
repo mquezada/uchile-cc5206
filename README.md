@@ -46,6 +46,7 @@ La siguiente es una lista de proyectos sugeridos para el curso. Las fechas de la
 
 #### Otros datasets disponibles
  
+- Vox Articles published before March 2017. https://data.world/elenadata/vox-articles
 - Portal de Datos Abiertos. http://datos.gob.cl
 - Gobierno Transparente. http://transparenciaactiva.presidencia.cl
 - Transparencia Universidad de Chile. http://www.uchile.cl/transparencia
