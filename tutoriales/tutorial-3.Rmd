@@ -1,0 +1,147 @@
+---
+title: "Laboratorio 3 - Clustering (sesiones 3.1 y 3.2)"
+author: "Mauricio Quezada, José Miguel Herrera, Bárbara Poblete"
+date: "20 y 23 de octubre de 2017"
+output: 
+  html_document: 
+    theme: cosmo
+    toc: yes
+---
+
+
+# Clustering de Texto
+
+
+CONTEXTO DE CLUSTERING
+
+
+En los siguientes 2 laborarios vamos a representar documentos mediante una  *bolsa de palabras* (Bag of Words o BOW). 
+Esta bolsa de palabras la representaremos en una matriz de términos donde cada fila corresponde a un documento, y las columnas, los términos o palabras de cada documento. 
+
+Por ejemplo, supongamos que tenemos 2 documentos:
+
+1. eres el iman y yo soy el metal
+2. yo si se quien eres
+
+Al conjunto de documentos le llamaremos **corpus**.
+Si juntamos todas las palabras del corpus, tenemos 11 términos (sin repetir): eres, el, iman, y, yo, soy, el, metal, si, se, quien. 
+A estos términos del corpus se le llama **Vocabulario** puesto que corresponden a todas las palabras de todos los documentos. 
+
+Por lo tanto, la matriz de términos quedaría de la forma:
+
+|   | eres | el | iman | y | yo | soy | el | metal | si | se | quien |
+|---|------|----|------|---|----|-----|----|-------|----|----|-------|
+| 1 |  *   | *  |  *   | * | *  | *   | *  |  *    |    |    |       |
+| 2 |  *   |    |      |   | *  |     |    |       | *  | *  |   *   |
+
+Notar que cada fila de la matriz representa a los documentos. 
+El valor de cada celda (*) corresponde al ''peso'' que tiene el término en el documento. 
+Algunas de las estrategias para asignar un peso a un término son las siguientes:
+
+- **Binaria**: Asignar 1 si el término está en el documento, y 0 si no está (sin importar su frecuencia).
+- **Frecuencia:** Asignar la frecuencia del término en el documento.
+- **tf-idf**: Asignar un valor relativo que es **mayor** si el término es a la vez frecuente dentro del documento e infrecuente en el conjunto de todos los documentos. Así mismo, **es menor** si es poco frecuente en el documento o si es frecuente en el conjunto de todos los documentos. Esta asignación tiene el nombre de tf-idf, o *term frequency -- inverse document frequency*.
+
+# n-gramas
+
+Otra forma de representar los documentos es mediante *n-gramas* (secuencias de *n* palabras que aparecen juntas); por ejemplo, Los bigramas (o 2-grama) del documento (2) serían: "yo si", "si se", "se quien", "quien eres". En este caso cada bigrama corresponde a un término que podría ser representado en la matriz.  En general se usan 1,2,3-grama. 
+
+# Preprocesamiento de texto
+
+El objetivo es reducir la cantidad de dimensiones lo más posible. En nuestro ejemplo (1) y (2), el vocabulario tiene 11 palabras. Eso implica que la matriz tiene 11 columnas. 
+
+Existen diversos métodos de pre-procesamiento que se realizan antes de llevar los datos a la matriz de términos (o en general para cualquier problema). 
+
+
+## Stopwords
+
+Corresponde a eliminar las palabras muy frecuentes en el lenguaje (en el caso del español: las preposiciones, pronombres, artículos, etc.). Es posible determinar metodológicamente las stopwords en un corpus dado de acuerdo al dominio del problema, ya que pueden depender del idioma, o del vocabulario usado.
+Por ejemplo, al eliminar las stopwords de cada documento, sería:
+
+1. eres ~~el~~ iman ~~y~~ ~~yo~~ ~~soy~~ ~~el~~ metal ==> eres iman metal
+2. ~~yo~~ ~~si~~ ~~se~~ quien eres ==> quien eres
+
+Hay librerías que tienen las stopwords pre-definidas. 
+Note que si no eliminaramos stopwords, las columnas de la matriz de términos son 11. Al remover stopwords, sólo son 4.
+
+
+## Lematización
+
+Consiste en dejar las palabras en su raíz. Por ejemplo: 'presidenta' y 'presidente' corresponden al mismo concepto, pero son palabras distintas, por lo que al lematizar, nos quedará como resultado 'president'. Por supuesto, habrá casos en los cuales no querremos lematizar, por ejemplo, si nos importa el género de las palabras, como en el caso anterior.
+
+## Otros
+
+Dependiendo el contexto del problema, a veces es necesario eliminar puntuación como puntos, comas, punto y coma, etc. 
+
+También se puede considerar remover espacios en blanco extra, números y y símbolos.
+
+Finalmente, es importante normalizar las palabras a sólo minúsculas. En nuestros ejemplos (1) y (2), todas las palabras están en minúsculas. Sin embargo, no hacer esta normalización implicaría que palabras como "Yo" y "yo" se consideren como diferentes. 
+
+
+
+
+
+
+# Archivos y librerías de la sesión
+
+Para ambas sesiones, será necesario descargar los siguientes archivos de **U-Cursos:** `matriz.csv.zip` y `dtm_no_stem.csv.zip` Los archivos corresponden a una muestra de 500 columnas de opinión del diario El Mostrador (http://www.elmostrador.cl).
+Descomprima y déjelos disponibles en el *Working Directory* de R.
+
+Luego, cargue las librerías necesarias y los datos en R:
+
+```{r, cache=T}
+# working directory
+setwd('/Users/jota/Google Drive/Doc/AuxMineria/uchile-cc5206-priv/2017-2/lab5/')
+
+# cargue la libreria principal del laboratorio, tm ('text mining')
+library('tm')
+
+# datos
+M <- read.csv('matriz.csv')[, -1]
+dtm <- as.DocumentTermMatrix(M, weighting = weightTfIdf)
+
+# ESTO NO ME FUNCIONA; AL PARECER SON LOS NA
+#inspect(dtm[1:10, 1:20])
+
+dtm
+```
+
+
+La matriz tiene 500 documentos y 16564 términos. 
+Pero, **¿por qué son tantos términos?** 
+Lo que estamos haciendo es representar los datos como una *bolsa de palabras* (Bag of Words o BOW), donde cada fila representa un documento, y las columnas, los términos o palabras de cada documento. 
+Por ejemplo, supongamos que tenemos 2 documentos:
+
+1. eres el iman y yo soy el metal
+2. yo si se quien eres
+
+Al conjunto de documentos se le llama **corpus**.
+Si juntamos todas las palabras, tenemos 11 términos (eres, el, iman, y, yo, soy, el, metal, si, se, quien). 
+A estos términos del corpus se le llama **Vocabulario** puesto que representan todas las palabras de todos los documentos. 
+Por lo tanto, la matriz quedaría de la forma:
+
+|   | eres | el | iman | y | yo | soy | el | metal | si | se | quien |
+|---|------|----|------|---|----|-----|----|-------|----|----|-------|
+| 1 |      |    |      |   |    |     |    |       |    |    |       |
+| 2 |      |    |      |   |    |     |    |       |    |    |       |
+
+
+El valor de cada celda corresponde al "peso" que tiene el término en el documento. 
+Algunas de las estrategias para asignar un peso a un término son las siguientes:
+
+- **Binaria**: Asignar 1 si el término está en el documento, y 0 si no está (sin importar su frecuencia).
+- **Frecuencia:** Asignar la frecuencia del término en el documento.
+- **tf-idf**: Asignar un valor relativo que es **mayor** si el término es a la vez frecuente dentro del documento e infrecuente en el conjunto de todos los documentos. Así mismo, **es menor** si es poco frecuente en el documento o si es frecuente en el conjunto de todos los documentos. Esta asignación tiene el nombre de tf-idf, o *term frequency -- inverse document frequency*.
+
+
+La matriz M, está pre-procesada de acuerdo a la última estrategia. 
+
+- Por otra parte, un término puede ser una *palabra*, o un $n$-grama (secuencias de $n$ palabras que aparecen juntas); por ejemplo, un bigrama (o $2$-grama) corresponde a un par de palabras. En este caso cada término corresponde a una palabra.
+
+- Otro preprocesamiento hecho sobre los datos corresponde a eliminar *stopwords* o palabras muy frecuentes en el lenguaje (en el caso del español: las preposiciones, pronombres, artículos, etc.). Es posible determinar metodológicamente las stopwords en un corpus dado de acuerdo al dominio del problema, ya que pueden depender del idioma, o del vocabulario usado.
+
+- Otro preprocesamiento corresponde a *lematizar* (*stemming*) las palabras para mantener una raíz única. Por ejemplo: 'presidenta' y 'presidente' corresponden al mismo concepto, pero son palabras distintas, por lo que al lematizar, nos quedará como resultado 'president'. Por supuesto, habrá casos en los cuales no querremos lematizar, por ejemplo, si nos importa el género de las palabras, como en el caso anterior.
+
+- Finalmente, espacios en blanco extra, números y y símbolos fueron removidos.
+
+¿Por qué hacemos todo este pre-procesamiento? El objetivo es reducir la cantidad de dimensiones lo más posible. Aun con el pre-procesamiento realizado, tenemos más de 16 mil dimensiones para sólo 500 instancias o documentos. Esto hace que el problema de clustering sea impráctico de realizar manualmente.
