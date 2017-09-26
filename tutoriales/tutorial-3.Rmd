@@ -82,7 +82,7 @@ Finalmente, es importante normalizar las palabras a sólo minúsculas. En nuestr
 
 
 
-# Archivos y librerías de la sesión
+# Archivos y librerías de la sesiones
 
 Para ambas sesiones, será necesario descargar los siguientes archivos de **U-Cursos:** `matriz.csv.zip` y `dtm_no_stem.csv.zip` Los archivos corresponden a una muestra de 500 columnas de opinión del diario El Mostrador (http://www.elmostrador.cl).
 Descomprima y déjelos disponibles en el *Working Directory* de R.
@@ -106,42 +106,6 @@ dtm <- as.DocumentTermMatrix(M, weighting = weightTfIdf)
 dtm
 ```
 
+Lo anterior genera una matriz M de términos correspondiente a un corpus de 500 documentos y 16564 términos. Es decir, un vocabulario de ~8 millones de palabras. 
 
-La matriz tiene 500 documentos y 16564 términos. 
-Pero, **¿por qué son tantos términos?** 
-Lo que estamos haciendo es representar los datos como una *bolsa de palabras* (Bag of Words o BOW), donde cada fila representa un documento, y las columnas, los términos o palabras de cada documento. 
-Por ejemplo, supongamos que tenemos 2 documentos:
-
-1. eres el iman y yo soy el metal
-2. yo si se quien eres
-
-Al conjunto de documentos se le llama **corpus**.
-Si juntamos todas las palabras, tenemos 11 términos (eres, el, iman, y, yo, soy, el, metal, si, se, quien). 
-A estos términos del corpus se le llama **Vocabulario** puesto que representan todas las palabras de todos los documentos. 
-Por lo tanto, la matriz quedaría de la forma:
-
-|   | eres | el | iman | y | yo | soy | el | metal | si | se | quien |
-|---|------|----|------|---|----|-----|----|-------|----|----|-------|
-| 1 |      |    |      |   |    |     |    |       |    |    |       |
-| 2 |      |    |      |   |    |     |    |       |    |    |       |
-
-
-El valor de cada celda corresponde al "peso" que tiene el término en el documento. 
-Algunas de las estrategias para asignar un peso a un término son las siguientes:
-
-- **Binaria**: Asignar 1 si el término está en el documento, y 0 si no está (sin importar su frecuencia).
-- **Frecuencia:** Asignar la frecuencia del término en el documento.
-- **tf-idf**: Asignar un valor relativo que es **mayor** si el término es a la vez frecuente dentro del documento e infrecuente en el conjunto de todos los documentos. Así mismo, **es menor** si es poco frecuente en el documento o si es frecuente en el conjunto de todos los documentos. Esta asignación tiene el nombre de tf-idf, o *term frequency -- inverse document frequency*.
-
-
-La matriz M, está pre-procesada de acuerdo a la última estrategia. 
-
-- Por otra parte, un término puede ser una *palabra*, o un $n$-grama (secuencias de $n$ palabras que aparecen juntas); por ejemplo, un bigrama (o $2$-grama) corresponde a un par de palabras. En este caso cada término corresponde a una palabra.
-
-- Otro preprocesamiento hecho sobre los datos corresponde a eliminar *stopwords* o palabras muy frecuentes en el lenguaje (en el caso del español: las preposiciones, pronombres, artículos, etc.). Es posible determinar metodológicamente las stopwords en un corpus dado de acuerdo al dominio del problema, ya que pueden depender del idioma, o del vocabulario usado.
-
-- Otro preprocesamiento corresponde a *lematizar* (*stemming*) las palabras para mantener una raíz única. Por ejemplo: 'presidenta' y 'presidente' corresponden al mismo concepto, pero son palabras distintas, por lo que al lematizar, nos quedará como resultado 'president'. Por supuesto, habrá casos en los cuales no querremos lematizar, por ejemplo, si nos importa el género de las palabras, como en el caso anterior.
-
-- Finalmente, espacios en blanco extra, números y y símbolos fueron removidos.
-
-¿Por qué hacemos todo este pre-procesamiento? El objetivo es reducir la cantidad de dimensiones lo más posible. Aun con el pre-procesamiento realizado, tenemos más de 16 mil dimensiones para sólo 500 instancias o documentos. Esto hace que el problema de clustering sea impráctico de realizar manualmente.
+Los pesos de la matriz M corresponden al *tf-idf* de cada término y cada documento. 

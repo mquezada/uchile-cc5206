@@ -1,5 +1,5 @@
 ---
-title: "Tutorial 1: Exploración y Visualización de Datos en R"
+title: "Tutorial 1.1: Exploración y Visualización de Datos en R"
 author: "Mauricio Quezada, José Miguel Herrera, Bárbara Poblete"
 date: "7 de Agosto de 2017"
 output: 
