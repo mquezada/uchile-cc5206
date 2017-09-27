@@ -106,6 +106,32 @@ dtm <- as.DocumentTermMatrix(M, weighting = weightTfIdf)
 dtm
 ```
 
-Lo anterior genera una matriz M de términos correspondiente a un corpus de 500 documentos y 16564 términos. Es decir, un vocabulario de ~8 millones de palabras. 
+Lo anterior genera una matriz M de términos correspondiente a un corpus de 500 documentos y 16564 términos. Es decir, un vocabulario de ~8 millones de palabras. Los pesos de la matriz M corresponden al *tf-idf* de cada término y cada documento. 
 
-Los pesos de la matriz M corresponden al *tf-idf* de cada término y cada documento. 
+## Librería skmeans
+En la sesión también usaremos la librería `skmeans` que es una implementación de $k$-means que usa la distancia (o disimilitud) coseno para comparar datos. Para datos en texto representados como bolsa de palabras con muchas dimensiones y tf-idf, la disimilitud coseno obtiene empíricamente mejores resultados que usar distancia euclidiana para comparar dos documentos. 
+Para instalar la librería y cargarla, ejecute:
+```{r, eval=F}
+install.packages('skmeans')
+library('skmeans')
+```
+
+## Libreria seriation 
+Sirve para reordenar matrices, generar dendogramas, entre otras cosas. Instale y cargue la librería:
+
+```{r, eval=F}
+install.packages('seriation')
+library(seriation)
+```
+
+
+
+
+# Otras cosas útiles de saber
+
+* [Distancia Coseno](https://es.wikipedia.org/wiki/Similitud_coseno) 
+* [Distancia euclideana](https://es.wikipedia.org/wiki/Distancia_euclidiana)
+* [Modelo de Bag of Words](https://en.wikipedia.org/wiki/Bag-of-words_model)
+* [Modelo vectorial para representar texto](https://en.wikipedia.org/wiki/Vector_space_model)
+<!-- 1. Código para pre-procesar los datos. https://users.dcc.uchile.cl/~mquezada/cursos/cc5206/2016-1/3-2-clustering.html -->
+
