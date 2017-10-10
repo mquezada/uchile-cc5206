@@ -1,150 +1,227 @@
 ---
 title: "Tutorial 3: Clustering"
 author: "Mauricio Quezada, José Miguel Herrera, Bárbara Poblete"
-date: "xxxx"
+date: "14 de Octubre 2017"
 output: 
   html_document: 
     theme: spacelab
     toc: yes
 ---
 
+# Clustering
 
-kmeans
-rnorm 
-link de clustering http://brandonrose.org/clustering
+En estos 2 laboratorios usaremos métodos de clustering para particionar datos.  
 
-recordar poner libririas a instalar
-dataset a descarar
-pairs
-codo
+## Función kmeans() de R
 
-
-
-
-## Funciones útiles para la sesión 
-
-En muchas ocaciones nos encontraremos que los datos no vienen de la forma que nos gustaría. A veces es necesario maniputar el formato de una tabla de datos para poder operarla.  
-
-La biblioteca ```reshape``` permite reformatear o manipular una matriz de datos. Para ello, primero debemos instalar el paquete mediante ```install.packages()```. 
-```{r eval=F}
-install.packages("reshape")
-```
-
-Instalar un paquete se hace sólo una vez, después sólo se invoca con ```library()```:
+El método k-means es un simple y **elegante** método para particionar datos en distintos clusters. Para ejemplificar, y conocer las funciones de R, haremos un ejemplo práctico donde se ven claramente 2 clusters:
 
 ```{r}
-library("reshape")
+set.seed(2)
+x = matrix(rnorm(50*2), ncol = 2)  # crea matriz de 2 columnas con 50 valores c/u aleatoriamente
+x[1:25,1] = x[1:25,1] + 3   # los primeros 25 se les suma 3
+x[1:25,2] = x[1:25,2] - 4   # los siguientes 25 se les resta 4
+head(x)
 ```
 
-Ahora veamos como se usa.
-Por ejemplo, consideremos el siguiente dataframe que contiene un registro de los goles que convirtió colo-colo (CC) y la Universidad de Chile (U) en la primera y segunda fecha del campeonato:
+Ejecutamos k-means y le indicamos que queremos que divida los datos en 2 clusters:
+```{r}
+km.out <- kmeans(x, 2, nstart = 20)
+```
+
+El parámetro *nstart* indica cuantas veces queremos que se ejecute el metódo desde cero. Se reporta siempre el mejor resultado.
+
+Las asignaciones de cada una de las 50 observaciones están contenidas en *k$cluster*:
+```{r}
+km.out$cluster
+```
+
+También podemos saber el tamaño de cada cluster:
+```{r}
+km.out$size
+```
+
+O donde están ubicados los *centroides*:
+```{r}
+km.out$centers
+```
+
+
+### Estimando la cantidad de clusters
+
+En el ejemplo, creamos los datos y los separamos en dos partes de manera intencional. Sin embargo, kmeans necesita el parámetro de la cantidad de clusters y no siempre sabremos la cantidad de particiones que se pueden hacer. 
+
+Una forma es estimandolo mediante la suma de la diferencia al cuadrado entre los puntos de cada cluster (wss). 
 
 ```{r}
-d <- data.frame(fecha = c(1,2,1,2),
-                equipo = c("CC", "CC", "U", "U"), 
-                favor = c(4, 3, 1, 2),
-                contra = c(0, 2, 4, 0))
-d
+wss <- 0
+clust = 15 # graficaremos hasta 15 clusters
+for (i in 1:clust){
+  wss[i] <-
+    sum(kmeans(x, centers=i)$withinss)
+}
+
+plot(1:clust, wss, type="b", xlab="Numero de clusters", ylab="wss")
 ```
 
-Por ejemplo, en la fecha 1, colo-colo hizo 4 goles (a favor) y no recibió goles en contra. En la misma fecha, la U hizo 1 gol (a favor) y recibió 4 en contra. 
+Acá se puede notar que un valor óptimo es 2 (mirar donde se forma un "codo"). Si eligieramos 3,4 ó 5, veríamos más particiones, pero no serían tan claras. ¡Podrían probarlo!
 
-Una forma de sumar todos los goles de la primera fecha es mediante la suma de las columnas favor y contra:
+
+
+#### Graficando
+
+Podemos ver si hay grupos entre pares de variables usando `pairs`. Acá notamos que hay una separación de 2 clusters:
 ```{r}
-f1 <- d[d$fecha == 1,]   
-sum(f1[, c(3,4)])  # c(3,4) indica que tomará la columna 3 y la 4. 
+pairs(x)
 ```
 
-Otra forma es tomar solo las columnas `favor` y en `contra`.
-
+También podríamos ver cada cluster con colores:
 ```{r}
-sum(d[d$fecha == 1, 3:4])  # 3:4 indica que tomará la columna 3 hasta la 4. 
+pairs(x, col=km.out$cluster)
 ```
 
-También podríamos haberlo hecho con `aggregate`. 
 
-### melt()
-
-Otra forma de sumar los goles de una fecha particular, es reformateando la tabla y dejando todos los goles en una sola columna. Para esto podemos usar la función ```melt()```:
-
+También lo podríamos haber hecho con *plot* (puesto que son sólo 2 variables):
 ```{r}
-d2 <- melt(d, id=c("fecha", "equipo"))
-d2
+plot(x, main="Resultados usando k = 2", xlab="", ylab="")
 ```
 
-Note que ahora cada fila contiene los mismos datos, pero ahora formateados de otra manera. 
-En la función se le indica que deje fijas las columnas `fecha` y `equipo`, y cree un registro para cada instancia de `favor` y otro en `contra`. Observe además el nombre de las nuevas columnas. 
-Con esto podríamos sumar más fácilmente todos los goles de la primera fecha:
-
+Lo mismo en colores: 
 ```{r}
-f2 <- d2[d2$fecha == 1,]
-sum(f2$value)
+plot(x, col=(km.out$cluster), main="Resultados usando k = 2 (plot bonito)", xlab="", ylab="", pch=20, cex=2)
 ```
 
 
-### rowSums()
 
-Esta función retorna una la suma de cada una de las fila de una matriz o data frame. Por ejemplo, usando `d` del ejemplo anterior, podríamos sumar todos los goles, de cada fecha y equipo. 
 
-```{r}
-rowSums(d[, 3:4])
-```
 
-### colSums()
+### Otra forma de graficar los resultados
 
-Lo mismo anterior, pero ahora con las columnas:
+Emplearemos un pequeño dataset del ingreso per cápita (IPCAP) en dólares de ciertos países en el año 2015 y 2016. Trataremos de particionar los datos de tal manera que deje los países más con mayor ingreso per cápita en un cluster y el resto en otro cluster.  
 
 ```{r}
-colSums(d[,3:4])
+d <- read.csv("/Users/jota/git/tutoriales/ip.txt", row.name = 1, header = T)
+head(d)
 
+#SSE
+wss <- 0
+clust = 15
+for (i in 1:clust){
+  wss[i] <-
+    sum(kmeans(d, centers=i)$withinss)
+}
+
+plot(1:clust, wss, type="b", xlab="Número de clusters", ylab="wss")
 ```
 
-
-
-### apply()
-
-Con ```apply()``` podemos aplicar funciones o procesos a un conjunto de datos evitándonos hacer iteraciones. 
-
-Por ejemplo, creemos una matriz de 4x5 con números aleatorios: 
+En este caso, se puede apreciar el codo el k = 2. Por lo tanto, creamos los clusters con k = 2. 
 ```{r}
-ax <- matrix(rnorm(20), ncol = 5)
-ax
+k2 <- kmeans(d, 2, nstart=20)
 ```
 
-```apply``` actúa sobre sobre filas o columnas y la sintanxis es: ```apply(DATA, FC, FUN)``` donde ```DATA``` son los datos, ```FC``` puede ser 1 (fila) o 2 (columna) y ```FUN``` es la función a aplicar. Entonces, para calcular el promedio de la primera fila, sería:
-```
-apply(ax, 1, mean)
-```
-También podría aplicar una función específica a cada columna ```x*10```:
-
-```{r}
-apply(ax, 2, function(x){return(x*10)})
-```
-
-### order()
-
-Con order podemos ordenar por una columna. Por ejemplo:
+Una forma de graficar: 
 
 ```{r}
-a <- data.frame(x=rnorm(100),y=rnorm(100))
-a[order(a$x),]   # ordena la columna x de menor a mayor
-a[order(a$x, decreasing = T),]   # ordena la columna x de mayor a menor
-
+library(ggplot2)
+ggplot(d, aes(anio2015, anio2016, color = k2$cluster)) +  geom_point() 
 ```
 
-### sort()
-
-Otra forma de ordenar es mediante `sort()`:
+Otra forma de graficar (más clara): 
 
 ```{r}
-b <- rnorm(100)
-sort(b)  # ordenado de menor a mayor
-sort(b, decreasing = T)  # ordenado de mayor a menor
+library("cluster")
+clusplot(d, k2$cluster, color=TRUE, shade=TRUE, labels=2, lines=0, main="IPCAP (k=2)")
 ```
 
 
-### Otras bibliotecas útiles para la sesión
+Hagamos lo mismo pero ahora con k = 3:
+
 ```{r}
-install.packages("data.table")
+k2 <- kmeans(d, 3, nstart=20)
+clusplot(d, k2$cluster, color=TRUE, shade=TRUE, labels=2, lines=0, main="IPCAP (k=3)")
 ```
+
+
+Hagamos lo mismo pero ahora con k = 4:
+
+
+```{r}
+k2 <- kmeans(d, 4, nstart=20)
+clusplot(d, k2$cluster, color=TRUE, shade=TRUE, labels=2, lines=0, main="IPCAP (k=4)")
+```
+
+
+## Clustering Jerárquico (Hierarchical clustering)
+
+Otra forma de hacer clustering es mediante clustering Jerárquico. En R la función `hclust()` permite utilizar este método. Usaremos el ejemplo del principio que está almacenado en la variable `x` para graficar un dendrograma usando las 3 técnicas del método: complete, single y average. Usaremos además la distancia euclideana para medir distancias https://en.wikipedia.org/wiki/Euclidean_distance. 
+
+```{r}
+hc.complete <- hclust(dist(x), method = "complete")
+hc.single <- hclust(dist(x), method = "single")
+hc.average <- hclust(dist(x), method = "average")
+```
+
+Ahora veamos los dendrogramas:
+```{r}
+par(mfrow=c(1,3))
+plot(hc.complete, main="Complete", xlab="", ylab="", cex=.9)
+plot(hc.single, main="Single", xlab="", ylab="", cex=.9)
+plot(hc.average, main="Average", xlab="", ylab="", cex=.9)
+```
+
+
+Para ver la asignación de cada observación a un cluster:
+
+```{r}
+cutree(hc.complete, 2) # si el arbol se corta en el segundo nivel
+cutree(hc.single, 2)   # ssi el arbol se corta en el segundo nivel
+cutree(hc.average, 2)  # si el arbol se corta en el segundo nivel
+```
+
+
+Para escalar las variables antes de hacer clustering jerárquico de las observaciones:
+
+```{r}
+xec = scale(x)
+plot(hclust(dist(xec), method = "complete"), main = "HC complete (scaled features)")
+```
+
+
+## DBSCAN
+
+```{r, eval=F}
+install.packages("dbscan")
+```
+
+
+Usaremos el dataset de iris:
+
+```{r}
+data("iris")
+x <- as.matrix(iris[, 1:4])
+db <- dbscan(x, eps = .4)  # eps es el radio
+db
+```
+
+Graficamos
+```{r}
+pairs(x, col = db$cluster + 1L)
+```
+
+
+```{r}
+lof <- lof(x, k = 4)
+pairs(x, cex = lof)
+```
+
+## Otras bibliotecas útiles para la sesión
+
+```{r, eval=F}
+#install.packages("data.table") # si es necesario
+```
+
+
+## Referencias complementarias
+
+* Document clustering with python:  http://brandonrose.org/clustering
 
