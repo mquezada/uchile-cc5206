@@ -1,12 +1,24 @@
 ---
-title: "Tutorial 1.2: Exploración y Visualización de Datos en R (parte 2)"
+title: "Tutorial 3: Clustering"
 author: "Mauricio Quezada, José Miguel Herrera, Bárbara Poblete"
-date: "11 de Agosto de 2017"
+date: "xxxx"
 output: 
   html_document: 
     theme: spacelab
     toc: yes
 ---
+
+
+kmeans
+rnorm 
+link de clustering http://brandonrose.org/clustering
+
+recordar poner libririas a instalar
+dataset a descarar
+pairs
+codo
+
+
 
 
 ## Funciones útiles para la sesión 
