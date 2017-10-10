@@ -100,7 +100,7 @@ plot(x, col=(km.out$cluster), main="Resultados usando k = 2 (plot bonito)", xlab
 Emplearemos un pequeño dataset del ingreso per cápita (IPCAP) en dólares de ciertos países en el año 2015 y 2016. Trataremos de particionar los datos de tal manera que deje los países más con mayor ingreso per cápita en un cluster y el resto en otro cluster.  
 
 ```{r}
-d <- read.csv("/Users/jota/git/tutoriales/ip.txt", row.name = 1, header = T)
+d <- read.csv("https://users.dcc.uchile.cl/~jherrera/dm/ip.txt", row.name = 1, header = T)
 head(d)
 
 #SSE
