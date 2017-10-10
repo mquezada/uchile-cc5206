@@ -12,7 +12,7 @@ output:
 
 En estos 2 laboratorios usaremos métodos de clustering para particionar datos.  
 
-## Función kmeans() de R
+## Kmeans
 
 El método k-means es un simple y **elegante** método para particionar datos en distintos clusters. Para ejemplificar, y conocer las funciones de R, haremos un ejemplo práctico donde se ven claramente 2 clusters:
 
@@ -190,13 +190,14 @@ plot(hclust(dist(xec), method = "complete"), main = "HC complete (scaled feature
 ## DBSCAN
 
 ```{r, eval=F}
-install.packages("dbscan")
+#install.packages("dbscan")
 ```
 
 
 Usaremos el dataset de iris:
 
 ```{r}
+library("dbscan")
 data("iris")
 x <- as.matrix(iris[, 1:4])
 db <- dbscan(x, eps = .4)  # eps es el radio
