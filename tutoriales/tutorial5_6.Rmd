@@ -164,7 +164,7 @@ clusplot(d[, c(1, 2)], k2$cluster, color=TRUE, shade=TRUE, labels=2, lines=0, ma
 ```
 
 
-Ahora, hacemos lo mismo pero con *k = 3*  *k = 4*:
+Ahora, hacemos lo mismo pero con *k = 3*  y *k = 4*:
 
 ```{r}
 set.seed(2)
@@ -205,13 +205,13 @@ cutree(hc.complete, 4) # si el arbol se corta en el cuarto nivel
 ```
 
 
-Para escalar las variables (una especie de normalización) antes de hacer clustering jerárquico de las observaciones:
+<!--Para escalar las variables (una especie de normalización) antes de hacer clustering jerárquico de las observaciones:
 
 ```{r}
 xec = scale(x)
 plot(hclust(dist(xec), method = "complete"), main = "HC complete (scaled features)")
 ```
-
+-->
 
 ## DBSCAN
 
