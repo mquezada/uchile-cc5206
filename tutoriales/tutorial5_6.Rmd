@@ -138,8 +138,8 @@ for (i in 1:clust){
 plot(1:clust, wss, type="b", xlab="Numero de clusters", ylab="wss")
 ```
 
-En este caso, se puede apreciar el codo el *k = 2* (o *k = 7* o *k = 9*)
-Creamos los clusters con k = 2. 
+En este caso, se puede apreciar el codo el *k = 2* (o *k = 7* o *k = 9*). 
+Creamos los clusters con *k = 2*. 
 ```{r}
 set.seed(2)
 k2 <- kmeans(d, 2, nstart=20)
@@ -240,7 +240,7 @@ ggplot(x, aes(x=x, y=y, colour=cluster)) + geom_point()
 
 ```
 
-Vemos que el cluster $0$ corresponde a puntos de ruido, por lo que el clustering no quedó como hubiésemos esperado. Si cambiamos los valores, obtenemos mejores resultados:
+Vemos que el cluster 0 corresponde a puntos de ruido, por lo que el clustering no quedó como hubiésemos esperado. Si cambiamos los valores, obtenemos mejores resultados:
 
 
 ```{r}
