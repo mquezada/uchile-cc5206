@@ -138,7 +138,7 @@ for (i in 1:clust){
 plot(1:clust, wss, type="b", xlab="Numero de clusters", ylab="wss")
 ```
 
-En este caso, se puede apreciar el codo el $k = 2$ (o $k = 7$ o $k = 9$)
+En este caso, se puede apreciar el codo el *k = 2* (o *k = 7* o *k = 9*)
 Creamos los clusters con k = 2. 
 ```{r}
 set.seed(2)
@@ -250,6 +250,14 @@ db
 x$cluster <- factor(db$cluster)
 ggplot(x, aes(x=x, y=y, colour=cluster)) + geom_point()
 
+```
+
+## Librerías útiles
+
+```{r, eval=F}
+install.packages("ggplot2")
+install.packages("GGally")
+install.packages("dbscan")
 ```
 
 
