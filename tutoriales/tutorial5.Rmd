@@ -1,0 +1,123 @@
+---
+title: "Tutorial 5 - Reglas de Asociación y Frequent Itemset Mining en R"
+author: "Mauricio Quezada, José Miguel Herrera, Bárbara Poblete"
+date: "3 de Noviembre de 2017"
+output: 
+  html_document: 
+    theme: spacelab
+    toc: yes
+---
+
+# Preliminares
+
+En R instale la librería `arules`:
+
+```{r eval=F}
+install.packages('arules', repos = 'https://cran.dcc.uchile.cl/')
+```
+
+Opcionalmente instale `arulesViz`, sin embargo, ésta requiere `gfortran` y puede dar problemas en Windows al instalar:
+
+```{r eval=F}
+install.packages('arulesViz', repos = 'https://cran.dcc.uchile.cl/')
+```
+
+# Conceptos básicos
+
+En análisis de reglas de asociación (Association Rules) y de conjuntos de objetos frecuentes (Frequent Itemset Analysis) tenemos distintos conceptos relevantes. Tomemos como ejemplo los datos de compras en un supermercado.
+
+- **Item**: Un objeto. Por ejemplo: "leche", "pañales", "cerveza".
+- **Itemset**: Un conjunto de cero o más objetos. Por ejemplo, {pan, bebida}.
+- **Transacción**: Una fila del dataset. Una transacción también es un itemset, pero una transacción es un dato del que disponemos, y no un itemset arbitrario. Por ejemplo, una compra en el supermercado es una transacción, y ésta puede contener múltiples objetos: una transacción puede ser {leche, pañales}, mientras que otra puede ser {pan, leche, huevos}.
+- **Dataset**: Conjunto de transacciones. Corresponde a las compras del supermercado de las que disponemos.
+- **Regla de asociación**: Una regla del estilo $X \rightarrow Y$, donde $X$ e $Y$ son itemsets, y $X\cap Y =\emptyset$. Por ejemplo, {leche, yogurt} $\rightarrow$ {pan}.
+
+Ojo que una regla de asociación no es una implicancia lógica. Es decir, no necesariamente existe una relación de causalidad entre $X$ e $Y$, sino que de co-ocurrencia.
+
+Existen distintas medidas de *interés* sobre itemsets y reglas. Entre las más importantes, están *support*, *confidence*, y *lift*:
+
+$$\sigma(X) = \text{# de veces que aparece }X \text{ en el dataset}$$
+$$\text{support}(X) = \frac{\sigma(X)}{N}$$
+
+$$\text{support}(X \rightarrow Y) = \frac{\sigma(X \cup Y)}{N}$$
+
+$$\text{confidence}(X \rightarrow Y) = \frac{\text{support}(X\rightarrow Y)}{\text{support}(X)} = \frac{\sigma(X \cup Y)}{\sigma(X)}$$
+$$\text{lift}(X\rightarrow Y) = \frac{\text{confidence}(X\rightarrow Y)}{\text{support}(Y)}$$
+
+Donde $N$ es la cantidad de transacciones (el tamaño del dataset).
+
+Si el dataset es muy grande, es posible interpretar estas medidas de interés como probabilidades:
+
+<!-- $$\text{support}(X) = P(X)$$ -->
+$$\text{support}(X \rightarrow Y) = P(X, Y)$$
+$$\text{confidence}(X \rightarrow Y) = P(Y|X)$$
+$$\text{lift}(X\rightarrow Y) = \frac{P(X, Y)}{P(X)P(Y)}$$
+
+Donde $P(X)$ es la probabilidad de $X$, $P(X, Y)$ es la probabilidad de $X$ e $Y$, y $P(Y|X)$ es la probabilidad de $Y$ dado $X$.
+
+
+Usualmente, el objetivo es encontrar reglas de asociación *interesantes* a partir del dataset de transacciones. Para esto, uno define umbrales (*thresholds*) de soporte, confianza, lift, etc. y trata de generar reglas cuya medida de interés sea $\geq$ cada uno de estos umbrales. Por ejemplo, podemos buscar reglas con *minSup = 0.05* y *minConf = 0.1*. 
+
+# Reglas de asociación en R
+
+Partimos cargando las librerías `arules` y `arulesViz`, y el dataset de compras de supermercado:
+
+```{r, warning=FALSE, message=FALSE}
+library("arules")
+data(Groceries)
+summary(Groceries)
+```
+
+Para observar las primeras 6 transacciones, usamos el comando `inspect` sobre `head`:
+
+```{r}
+inspect(head(Groceries))
+```
+
+Para observar los itemsets más frecuentes, usamos el método `eclat`, que no determina reglas de asociación, sino itemsets.
+
+```{r}
+frequentItems <- eclat(Groceries, parameter = list(supp = 0.07, maxlen = 15))
+items.sorted <- sort(frequentItems, by="support")
+inspect(items.sorted)
+itemFrequencyPlot(Groceries, topN=10, type="absolute", main="Item Frequency")
+```
+
+Para generar reglas de asociación usamos el algoritmo *Apriori* implementado en la librería `arules`:
+
+```{r}
+rules <- apriori(Groceries, parameter=list(support=0.001, confidence=0.5))
+rules.sorted <- sort(rules, by="lift")
+rules.sorted.first3 <- head(rules.sorted, 3)
+
+inspect(rules.sorted.first3)
+```
+
+Podemos observar que la regla con mayor lift (cuyas asociaciones son más fuertes) es aquella que dice: *cada vez que se compran productos de comida rápida y soda, entonces se compra también carne para hamburguesas*. Note, sin embargo, que esto se produce sólo en un 0.1% de todas las transacciones del dataset (support).
+
+
+Es claro que no es viable analizar manualmente las 5668 reglas generadas. Para esto, usamos técnicas de visualización provistas por `arulesViz`:
+
+```{r, warning=F}
+library("arulesViz")
+plot(rules)
+```
+
+Con este gráfico es posible observar que las reglas más interesantes (basadas en el lift) tienen bajo soporte. 
+
+
+Otra forma de visualizar las reglas de asociación es usando un gráfico de matriz agrupada. Éste muestra en una matriz un círculo indicando algunas medidas de interés; en las columnas se muestra el lado derecho de una regla, mientras que en las filas se muestra el lado izquierdo. Los itemsets mostrados corresponden a los grupos de itemsets más similares entre sí (¡Clustering! Acá se usa como medida de similitud la *distancia de Jaccard* para comparar la cantidad de elementos en común entre dos itemsets $X$ e $Y$).
+
+```{r, fig.width=9, fig.height=10}
+plot(rules, method="grouped")
+```
+
+El color de cada círculo representa el lift, mientras que el tamaño representa el support. Es posible observar que la regla más fuerte que vimos recién se muestra en la esquina superior izquierda.
+
+
+Otra forma de visualizar es usando *grafos* (redes de conexiones entre nodos o vértices mediante arcos o aristas). Usualmente, los vértices representan items o itemsets, y las aristas representan relaciones entre las reglas. La desventaja de este tipo de visualización es que se satura fácilmente con muchos datos (clutter). Para los siguientes gráficos vamos a usar las 10 reglas con mayor lift. Para conjuntos de reglas más grandes, es necesario usar herramientas interactivas, que permitan inspeccionar ciertas zonas del grafo, filtrar, etc. (como [Gephi](http://gephi.github.io)).
+
+```{r, fig.width=12, fig.height=10}
+subrules <- head(sort(rules, by="confidence"), 15)
+plot(subrules, method="graph", measure="support")
+```
